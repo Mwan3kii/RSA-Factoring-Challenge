@@ -3,21 +3,21 @@
 import sys
 
 def factorize(num):
-    for j in range(2, num // 2 + 1):
+    factors = []
+    for j in range(2, num):
         if num % j == 0:
-            return f"{num}={j}*{num // j}"
+            factors.append((j, num // j))
+            break
+    return factors
 
-def main(filename):
+def main():
+    filename = sys.argv[1]
     with open(filename, 'r') as file:
-        num = [int(line.strip()) for line in file.readlines()]
-
-    for num in num:
-        result = factorize(num)
-        print(result)
+        numbers = file.readlines()
+        for number in numbers:
+            num = int(number.strip())
+            factors = factorize(num)
+            print(f"{num}={factors[0][0]}*{factors[0][1]}")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: factors <file>")
-        sys.exit(1)
-    filename = sys.argv[1]
-    main(filename)
+    main()

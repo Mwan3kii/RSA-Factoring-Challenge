@@ -1,26 +1,38 @@
 #!/usr/bin/env python3
 
 import sys
+import math
+import random
+def gcd(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a
+def pollards_rho(n):
+    x = random.randint(1, n - 1)
+    y = x
+    c = random.randint(1, n - 1)
+    d = 1
 
-def is_prime(num):
-    if num < 2:
-        return False
-    for j in range(2, int(num**0.5) + 1):
-        if num % j == 0:
-            return False
-    return True
+    f = lambda x: (x**2 + c) % n
 
-def factorize_rsa_num(n):
-    for K in range(2, n // 2 + 1):
-        if n % k == 0 and is_prime(k) and is_prime(n // k):
-            return f"{n}={i}*{n // i}"
+    while d == 1:
+        x = f(x)
+        y = f(f(y))
+        d = gcd(abs(x - y), n)
+    return d
+
+def factorize_rsa_number(n):
+    if n % 2 == 0:
+        return f"{n}=2*{n // 2}"
+    factor = pollards_rho(n)
+    return f"{n}={factor}*{n // factor}"
 
 def main(filename):
     with open(filename, 'r') as file:
         rsa_numbers = [int(line.strip()) for line in file.readlines()]
 
     for n in rsa_numbers:
-        result = factorize_rsa_num(n)
+        result = factorize_rsa_number(n)
         print(result)
 
 if __name__ == "__main__":
